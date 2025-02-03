@@ -9,6 +9,10 @@ got to [Calculator-App](https://github.com/scelokhoza/Calculator-App) to run the
 
 
 
+![Screenshot from 2025-02-03 20-23-50](https://github.com/user-attachments/assets/4405438c-71cc-4f27-ad31-cb3b64e9b56f)
+
+
+
 
 
 
