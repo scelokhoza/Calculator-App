@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: lime;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #console {
+            width: 80%;
+            max-width: 600px;
+            height: 300px;
+            border: 2px solid lime;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: black;
+        }
+        #input {
+            width: 80%;
+            max-width: 600px;
+            padding: 5px;
+            border: 2px solid lime;
+            background-color: black;
+            color: lime;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scientific Calculator</h1>
+    <div id="console"></div>
+    <input type="text" id="input" placeholder="Enter expression... or type 'clear'">
+
+    <script>
+        const consoleDiv = document.getElementById("console");
+        const inputField = document.getElementById("input");
+
+        function appendToConsole(text) {
+            consoleDiv.innerHTML += `<p>> ${text}</p>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleDiv.innerHTML = "";
+        }
+
+        function safeEval(expression) {
+            const allowedFunctions = {
+                sin: Math.sin,
+                cos: Math.cos,
+                tan: Math.tan,
+                log: Math.log,
+                sqrt: Math.sqrt,
+                pow: Math.pow,
+                abs: Math.abs,
+                round: Math.round,
+                floor: Math.floor,
+                ceil: Math.ceil,
+                pi: Math.PI,
+                e: Math.E
+            };
+
+            try {
+                if (expression.toLowerCase() === "clear") {
+                    clearConsole();
+                    return;
+                }
+
+                let sanitized = expression.replace(/[^0-9+\-*/().,a-z]/gi, "");
+                sanitized = sanitized.replace(/(\b[a-z]+\b)/gi, match => {
+                    return allowedFunctions.hasOwnProperty(match) ? `allowedFunctions.${match}` : "undefined";
+                });
+
+                let result = Function("allowedFunctions", `return (${sanitized})`)(allowedFunctions);
+                if (isNaN(result) || result === undefined) throw new Error("Invalid Expression");
+                appendToConsole(`${expression} = ${result}`);
+            } catch (error) {
+                appendToConsole("Error: Invalid Expression");
+            }
+        }
+
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const expression = inputField.value.trim();
+                if (expression) {
+                    safeEval(expression);
+                    inputField.value = "";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
