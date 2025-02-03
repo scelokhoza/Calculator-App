@@ -34,13 +34,18 @@
             color: lime;
             font-size: 1.2em;
         }
+        #source-link {
+            margin-top: 10px;
+            color: lime;
+        }
     </style>
 </head>
 <body>
     <h1>Scientific Calculator</h1>
     <div id="console"></div>
-    <input type="text" id="input" placeholder="Enter expression... or type 'clear'">
-
+    <input type="text" id="input" placeholder="Enter expression...">
+    <a id="source-link" href="https://github.com/scelokhoza/Calculator-App" target="_blank">View Source Code on GitHub</a>
+    
     <script>
         const consoleDiv = document.getElementById("console");
         const inputField = document.getElementById("input");
@@ -75,12 +80,12 @@
                     clearConsole();
                     return;
                 }
-
+                
                 let sanitized = expression.replace(/[^0-9+\-*/().,a-z]/gi, "");
                 sanitized = sanitized.replace(/(\b[a-z]+\b)/gi, match => {
                     return allowedFunctions.hasOwnProperty(match) ? `allowedFunctions.${match}` : "undefined";
                 });
-
+                
                 let result = Function("allowedFunctions", `return (${sanitized})`)(allowedFunctions);
                 if (isNaN(result) || result === undefined) throw new Error("Invalid Expression");
                 appendToConsole(`${expression} = ${result}`);
